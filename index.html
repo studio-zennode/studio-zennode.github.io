@@ -3,184 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Zen-Node | Official Portfolio</title>
+    <title>Studio Zen-Node | Portfolio</title>
     <style>
         :root {
-            --bg-zen: #1a1a1a;
-            --bg-darker: #0d0d0d;
-            --accent: #00e5ff;
-            --text: #ffffff;
-            --sub: #888888;
-            --font-mono: 'Courier New', Courier, monospace;
+            /* 疲れにくい配色へ調整 */
+            --bg-main: #1a1a1c;
+            --bg-card: #252528;
+            --accent: #00d1ff; /* 少し彩度を落としたブルー */
+            --text-main: #e0e0e0;
+            --text-sub: #a0a0a0;
+            /* UDフォントを優先 */
+            --font-ud: "BIZ UDPGothic", "Hiragino Sans", "Meiryo", sans-serif;
+            --font-mono: "Cascadia Code", "Courier New", monospace;
+        }
+
+        /* ライトモード設定（localStorageで切り替え） */
+        body.light-mode {
+            --bg-main: #f5f5f7;
+            --bg-card: #ffffff;
+            --text-main: #1d1d1f;
+            --text-sub: #6e6e73;
+            --accent: #0071e3;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        
+
         body {
-            background-color: var(--bg-zen);
-            color: var(--text);
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background-color 1s;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-ud);
+            line-height: 1.7;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        canvas#nodes {
-            position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: 0.3;
-        }
+        /* アクセシビリティ：フォーカス時の視認性 */
+        :focus { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; z-index: 2; position: relative; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
 
+        /* Header & Hamburger */
         header {
-            position: fixed; top: 0; width: 100%; padding: 20px; z-index: 100;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+            position: fixed; top: 0; width: 100%; height: 70px;
             display: flex; justify-content: space-between; align-items: center;
+            padding: 0 40px; z-index: 100;
+            background: rgba(var(--bg-main), 0.8); backdrop-filter: blur(10px);
         }
 
-        .logo-box { font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
+        .logo-area img { height: 45px; vertical-align: middle; }
 
-        section { min-height: 100vh; padding: 120px 0; display: flex; align-items: center; }
-
-        .glitch {
-            font-size: 5rem; font-weight: 900; position: relative;
-            text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75);
-            animation: glitch 500ms infinite;
+        .menu-btn {
+            background: none; border: none; cursor: pointer; padding: 10px; z-index: 110;
+        }
+        .menu-btn span {
+            display: block; width: 25px; height: 2px; background: var(--text-main);
+            margin: 6px 0; transition: 0.3s;
         }
 
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75); }
-            50% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75); }
+        /* 展開後のメニュー */
+        .nav-menu {
+            position: fixed; top: 0; right: -100%; width: 300px; height: 100vh;
+            background: var(--bg-card); display: flex; flex-direction: column;
+            padding: 100px 40px; transition: 0.4s; z-index: 105; box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+        .nav-menu.active { right: 0; }
+        .nav-menu a {
+            color: var(--text-main); text-decoration: none; font-size: 1.2rem;
+            margin-bottom: 25px; font-weight: bold;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        /* Section Settings */
+        section { padding: 120px 0; min-height: 100vh; display: flex; align-items: center; }
+
+        /* 目に優しいタイトル演出（グリッチ廃止、フェードのみ） */
+        .hero-title {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 800; letter-spacing: -0.02em;
+            margin-bottom: 10px; opacity: 0; transform: translateY(20px);
+            animation: fadeIn 1s forwards;
+        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .card {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            padding: 30px; border-radius: 2px; transition: 0.4s; opacity: 0; transform: translateY(30px);
+            background: var(--bg-card); padding: 32px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
         }
-        .card.show { opacity: 1; transform: translateY(0); }
-        .card:hover { border-color: var(--accent); background: rgba(0, 229, 255, 0.05); }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
 
-        .tag { display: inline-block; background: var(--accent); color: #000; padding: 2px 8px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-        .tag.stop { background: #ff3e3e; color: #fff; } /* 停止中用タグ */
+        .tag { color: var(--accent); font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; }
 
-        h2 { font-size: 2.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; }
-        
-        .spec-list { list-style: none; font-family: var(--font-mono); font-size: 0.9rem; }
-        .spec-list li { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .spec-list span { color: var(--accent); }
+        /* Settings Area */
+        .settings-panel { margin-top: 40px; padding: 20px; border: 1px dashed var(--text-sub); }
+        button.tool-btn {
+            background: var(--accent); color: #000; border: none;
+            padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;
+        }
 
-        footer { text-align: center; padding: 60px; color: var(--sub); font-size: 12px; }
-
+        footer { text-align: center; padding: 60px; color: var(--text-sub); font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <canvas id="nodes"></canvas>
-
     <header>
-        <div class="logo-box">STUDIO ZEN-NODE</div>
-        <nav style="font-family: var(--font-mono); font-size: 13px;">
-            <a href="#hero" style="color:white; text-decoration:none; margin-left:20px;">TOP</a>
-            <a href="#spec" style="color:white; text-decoration:none; margin-left:20px;">SPEC</a>
-            <a href="#status" style="color:white; text-decoration:none; margin-left:20px;">STATUS</a>
-        </nav>
+        <div class="logo-area">
+            <img src="logo_square.png" alt="Studio Zen-Node">
+        </div>
+        <button class="menu-btn" aria-label="メニューを開く" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
     </header>
 
-    <section id="hero">
-        <div class="container" style="text-align: center;">
-            <div class="tag">EST. 2026</div>
-            <h1 class="glitch" data-text="ZEN-NODE">ZEN-NODE</h1>
-            <p style="letter-spacing: 8px; color: var(--sub);">CREATIVE NODES IN NAGANO</p>
-        </div>
-    </section>
+    <nav class="nav-menu" id="navMenu">
+        <a href="#hero" onclick="toggleMenu()">TOP</a>
+        <a href="#works" onclick="toggleMenu()">WORKS</a>
+        <a href="#spec" onclick="toggleMenu()">SYSTEM</a>
+        <a href="#settings" onclick="toggleMenu()">SETTINGS</a>
+    </nav>
 
-    <section id="spec">
-        <div class="container">
-            <h2>SYSTEM & TOOLS</h2>
-            <div class="grid">
-                <div class="card reveal">
-                    <div class="tag">HARDWARE</div>
-                    <h3>Main Workstation</h3>
-                    <ul class="spec-list" style="margin-top:15px;">
-                        <li>CPU: <span>Core i7-14000HX</span></li>
-                        <li>GPU: <span>NVIDIA RTX 5060</span></li>
-                        <li>RAM: <span>32GB High Speed</span></li>
-                        <li>OS: <span>Windows 11 Home</span></li>
-                    </ul>
-                </div>
-                <div class="card reveal">
-                    <div class="tag">SOFTWARE</div>
-                    <h3>Creative Tools</h3>
-                    <ul class="spec-list" style="margin-top:15px;">
-                        <li>Video: <span>PowerDirector Ultimate Suite</span></li>
-                        <li>Code: <span>VS Code / Python / JS</span></li>
-                        <li>Design: <span>Logo & Motion Graphics</span></li>
-                    </ul>
+    <main class="container">
+        <section id="hero">
+            <div>
+                <span class="tag">PORTFOLIO v2.0</span>
+                <h1 class="hero-title">Studio Zen-Node</h1>
+                <p style="color: var(--text-sub);">禅の精神と情報工学の結節点。長野を拠点に活動するエンジニア・クリエイター。</p>
+            </div>
+        </section>
+
+        <section id="works">
+            <div style="width: 100%;">
+                <h2 style="margin-bottom: 40px;">実績とプロジェクト</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <span class="tag">VIDEO EDITING</span>
+                        <h3>中学校 卒業記念映像</h3>
+                        <p style="font-size: 0.9rem; margin-top:10px; color: var(--text-sub);">
+                            3年間の膨大な素材を15分に集約。PowerDirectorによる高度なカラーグレーディングとモーショングラフィックスを実装。
+                        </p>
+                    </div>
+                    <div class="card">
+                        <span class="tag">WEB TECH</span>
+                        <h3>Shinorail Project</h3>
+                        <p style="font-size: 0.9rem; margin-top:10px; color: var(--text-sub);">
+                            GitHub Pagesを活用した鉄道シミュレーションWebサイトの運営。HTML/CSS/JSの基礎を確立。
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="status">
-        <div class="container">
-            <h2>STATUS</h2>
-            <div class="card reveal" style="width: 100%; border-left: 5px solid #ff3e3e;">
-                <div class="tag stop">OFFLINE</div>
-                <h3 style="color: #ff3e3e;">ただいま案件の新規募集を停止しております。</h3>
-                <p style="margin-top: 15px; color: var(--sub);">
-                    現在、新生活の準備および自己研鑽のため、外部からの案件制作・開発のご依頼を一時的に停止させていただいております。<br>
-                    再開の際は、こちらのサイトまたはSNSにて改めて告知いたします。
-                </p>
-                <div style="margin-top: 20px; font-family: var(--font-mono); font-size: 0.9rem;">
-                    [ 予定 ] 2026年4月以降、状況に応じて一部再開検討
+        <section id="spec">
+            <div style="width: 100%;">
+                <h2 style="margin-bottom: 40px;">使用ソフト & スペック</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Main PC</h3>
+                        <p style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 10px;">
+                            CPU: i7-14000HX<br>
+                            GPU: RTX 5060<br>
+                            RAM: 32GB<br>
+                            OS: Windows 11
+                        </p>
+                    </div>
+                    <div class="card">
+                        <h3>Software</h3>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            PowerDirector 365<br>
+                            Visual Studio Code<br>
+                            Python / Node.js
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section id="settings">
+            <div style="width: 100%;">
+                <h2>アクセシビリティ設定</h2>
+                <p style="margin-bottom: 20px;">あなたの閲覧環境に合わせて表示を最適化します。設定はブラウザに保存されます。</p>
+                <div class="settings-panel">
+                    <button class="tool-btn" onclick="toggleDarkMode()">モード切替</button>
+                    <span id="modeStatus">現在のモード: ダーク</span>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        &copy; 2026 STUDIO ZEN-NODE | NAGANO TECHNICAL HS INFO-ENG.<br>
-        禅の精神と情報の結節点。
+        &copy; 2026 Studio Zen-Node | Designed for Accessibility
     </footer>
 
     <script>
-        const canvas = document.getElementById('nodes');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-        class P {
-            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.3; }
-            update() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1; }
+        // ハンバーガーメニュー制御
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
         }
-        for(let i=0; i<60; i++) particles.push(new P());
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.strokeStyle = "rgba(0,229,255,0.15)";
-            particles.forEach((p,i)=>{
-                p.update();
-                for(let j=i+1; j<particles.length; j++){
-                    let d = Math.hypot(p.x-particles[j].x, p.y-particles[j].y);
-                    if(d<150){ ctx.lineWidth=1-d/150; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(particles[j].x,particles[j].y); ctx.stroke(); }
-                }
-            });
-            requestAnimationFrame(draw);
+
+        // localStorage を使ったダークモード管理
+        function toggleDarkMode() {
+            const isLight = document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateStatusText(isLight);
         }
-        draw();
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('show');
-            });
-        }, { threshold: 0.1 });
+        function updateStatusText(isLight) {
+            document.getElementById('modeStatus').innerText = `現在のモード: ${isLight ? 'ライト' : 'ダーク'}`;
+        }
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        // ページ読み込み時に設定を復元
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                updateStatusText(true);
+            }
+        });
 
+        // スクロール時のヘッダー演出
         window.addEventListener('scroll', () => {
-            const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-            document.body.style.backgroundColor = p > 0.4 ? 'var(--bg-darker)' : 'var(--bg-zen)';
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 5px 20px rgba(0,0,0,0.2)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
         });
     </script>
 </body>
