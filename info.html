@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info | Studio Zen-Node</title>
+    <style>
+        :root {
+            --bg-main: #1a1a1c;
+            --bg-card: #252528;
+            --accent: #00d1ff;
+            --text-main: #e0e0e0;
+            --text-sub: #a0a0a0;
+            --font-ud: "BIZ UDPGothic", "Hiragino Sans", "Meiryo", sans-serif;
+        }
+
+        body.light-mode {
+            --bg-main: #f5f5f7;
+            --bg-card: #ffffff;
+            --text-main: #1d1d1f;
+            --text-sub: #6e6e73;
+            --accent: #0071e3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-ud);
+            line-height: 1.8;
+            transition: 0.3s;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 100px 24px; }
+        header { position: fixed; top: 0; width: 100%; height: 70px; background: rgba(var(--bg-main), 0.8); backdrop-filter: blur(10px); display: flex; align-items: center; padding: 0 40px; z-index: 100; }
+        .back-link { color: var(--accent); text-decoration: none; font-weight: bold; }
+
+        h1 { font-size: 2rem; margin-bottom: 40px; border-bottom: 2px solid var(--accent); display: inline-block; }
+        h2 { font-size: 1.4rem; margin: 40px 0 20px; color: var(--accent); }
+        section { background: var(--bg-card); padding: 30px; border-radius: 12px; margin-bottom: 30px; }
+        p, li { font-size: 0.95rem; margin-bottom: 15px; }
+        ul { margin-left: 20px; }
+
+        footer { text-align: center; padding: 40px; color: var(--text-sub); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-link">← TOPへ戻る</a>
+    </header>
+
+    <main class="container">
+        <h1>Legal Information</h1>
+
+        <section>
+            <h2>1. 知的財産権について</h2>
+            <p>当サイト「Studio Zen-Node」に掲載されている全てのコンテンツ（ロゴ、映像、画像、テキスト、ソースコード、デザイン等）に関する著作権および知的財産権は、原則として運営者に帰属します。</p>
+            <ul>
+                <li>無断での転載、複製、二次配布、改変を固く禁じます。</li>
+                <li>制作実績として掲載している動画の権利は、一部元クライアントに帰属する場合があります。</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>2. 利用規約</h2>
+            <p>本サイトを利用するにあたり、以下の行為を禁止します。</p>
+            <ul>
+                <li>当方のサーバーやネットワークの機能を破壊したり、妨害したりする行為。</li>
+                <li>当方のサービスの運営を妨害するおそれのある行為。</li>
+                <li>他のユーザーまたは第三者に不利益、損害、不快感を与える行為。</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. プライバシーポリシー</h2>
+            <p>当方は、お問い合わせ等を通じて提供いただいた個人情報を、以下の通り適切に取り扱います。</p>
+            <ul>
+                <li><strong>利用目的：</strong>お問い合わせへの回答、制作業務に関する連絡、およびサービスの提供。</li>
+                <li><strong>第三者提供：</strong>法令に基づく場合を除き、本人の同意なく個人情報を第三者に提供することはありません。</li>
+                <li><strong>管理：</strong>個人情報の漏洩、紛失の防止に努め、安全に管理いたします。</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. 免責事項</h2>
+            <p>当サイトの情報の正確性には細心の注意を払っておりますが、利用者が当サイトの情報を用いて行う一切の行為について、当方は何ら責任を負うものではありません。また、当サイトからリンクされた外部サイトの内容についても責任を負いません。</p>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2026 Studio Zen-Node | All Rights Reserved.
+    </footer>
+
+    <script>
+        // 親ページの設定を引き継ぐ（localStorage）
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        });
+    </script>
+</body>
+</html>
