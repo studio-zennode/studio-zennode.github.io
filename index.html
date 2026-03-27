@@ -1,1 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Zen-Node | Official Portfolio</title>
+    <style>
+        :root {
+            --bg-zen: #1a1a1a;
+            --bg-darker: #0d0d0d;
+            --accent: #00e5ff;
+            --text: #ffffff;
+            --sub: #888888;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--bg-zen);
+            color: var(--text);
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 1s;
+        }
+
+        canvas#nodes {
+            position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: 0.3;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; z-index: 2; position: relative; }
+
+        header {
+            position: fixed; top: 0; width: 100%; padding: 20px; z-index: 100;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo-box { font-family: var(--font-mono); font-weight: bold; font-size: 1.2rem; }
+
+        section { min-height: 100vh; padding: 120px 0; display: flex; align-items: center; }
+
+        .glitch {
+            font-size: 5rem; font-weight: 900; position: relative;
+            text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75), 0.025em 0.05em 0 rgba(0,0,255,0.75);
+            animation: glitch 500ms infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.05em -0.025em 0 rgba(0,255,0,0.75); }
+            50% { text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75); }
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px; border-radius: 2px; transition: 0.4s; opacity: 0; transform: translateY(30px);
+        }
+        .card.show { opacity: 1; transform: translateY(0); }
+        .card:hover { border-color: var(--accent); background: rgba(0, 229, 255, 0.05); }
+
+        .tag { display: inline-block; background: var(--accent); color: #000; padding: 2px 8px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+        .tag.stop { background: #ff3e3e; color: #fff; } /* 停止中用タグ */
+
+        h2 { font-size: 2.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; }
+        
+        .spec-list { list-style: none; font-family: var(--font-mono); font-size: 0.9rem; }
+        .spec-list li { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .spec-list span { color: var(--accent); }
+
+        footer { text-align: center; padding: 60px; color: var(--sub); font-size: 12px; }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="nodes"></canvas>
+
+    <header>
+        <div class="logo-box">STUDIO ZEN-NODE</div>
+        <nav style="font-family: var(--font-mono); font-size: 13px;">
+            <a href="#hero" style="color:white; text-decoration:none; margin-left:20px;">TOP</a>
+            <a href="#spec" style="color:white; text-decoration:none; margin-left:20px;">SPEC</a>
+            <a href="#status" style="color:white; text-decoration:none; margin-left:20px;">STATUS</a>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="container" style="text-align: center;">
+            <div class="tag">EST. 2026</div>
+            <h1 class="glitch" data-text="ZEN-NODE">ZEN-NODE</h1>
+            <p style="letter-spacing: 8px; color: var(--sub);">CREATIVE NODES IN NAGANO</p>
+        </div>
+    </section>
+
+    <section id="spec">
+        <div class="container">
+            <h2>SYSTEM & TOOLS</h2>
+            <div class="grid">
+                <div class="card reveal">
+                    <div class="tag">HARDWARE</div>
+                    <h3>Main Workstation</h3>
+                    <ul class="spec-list" style="margin-top:15px;">
+                        <li>CPU: <span>Core i7-14000HX</span></li>
+                        <li>GPU: <span>NVIDIA RTX 5060</span></li>
+                        <li>RAM: <span>32GB High Speed</span></li>
+                        <li>OS: <span>Windows 11 Home</span></li>
+                    </ul>
+                </div>
+                <div class="card reveal">
+                    <div class="tag">SOFTWARE</div>
+                    <h3>Creative Tools</h3>
+                    <ul class="spec-list" style="margin-top:15px;">
+                        <li>Video: <span>PowerDirector Ultimate Suite</span></li>
+                        <li>Code: <span>VS Code / Python / JS</span></li>
+                        <li>Design: <span>Logo & Motion Graphics</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="status">
+        <div class="container">
+            <h2>STATUS</h2>
+            <div class="card reveal" style="width: 100%; border-left: 5px solid #ff3e3e;">
+                <div class="tag stop">OFFLINE</div>
+                <h3 style="color: #ff3e3e;">ただいま案件の新規募集を停止しております。</h3>
+                <p style="margin-top: 15px; color: var(--sub);">
+                    現在、新生活の準備および自己研鑽のため、外部からの案件制作・開発のご依頼を一時的に停止させていただいております。<br>
+                    再開の際は、こちらのサイトまたはSNSにて改めて告知いたします。
+                </p>
+                <div style="margin-top: 20px; font-family: var(--font-mono); font-size: 0.9rem;">
+                    [ 予定 ] 2026年4月以降、状況に応じて一部再開検討
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 STUDIO ZEN-NODE | NAGANO TECHNICAL HS INFO-ENG.<br>
+        禅の精神と情報の結節点。
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('nodes');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class P {
+            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.3; }
+            update() { this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1; }
+        }
+        for(let i=0; i<60; i++) particles.push(new P());
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = "rgba(0,229,255,0.15)";
+            particles.forEach((p,i)=>{
+                p.update();
+                for(let j=i+1; j<particles.length; j++){
+                    let d = Math.hypot(p.x-particles[j].x, p.y-particles[j].y);
+                    if(d<150){ ctx.lineWidth=1-d/150; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(particles[j].x,particles[j].y); ctx.stroke(); }
+                }
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('show');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+            document.body.style.backgroundColor = p > 0.4 ? 'var(--bg-darker)' : 'var(--bg-zen)';
+        });
+    </script>
+</body>
+</html>
